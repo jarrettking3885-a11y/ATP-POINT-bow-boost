@@ -2,32 +2,41 @@ name: Build
 
 on:
   push:
-    branches: [ "**" ]
+    branches:
+      - main
+      - master
   pull_request:
-  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 21
+          java-version: '21'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: 8.10
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+        if: ${{ hashFiles('gradlew') != '' }}
 
-      - name: Build
-        run: gradle build --stacktrace
+      - name: Verify project structure
+        run: |
+          pwd
+          echo "Repository files:"
+          ls -la
+          echo "Gradle files:"
+          find . -maxdepth 2 -type f \( -name "settings.gradle" -o -name "build.gradle" -o -name "gradle.properties" \)
 
-      - name: Upload built jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: bowboost-helper-jar
-          path: build/libs/*.jar
+      - name: Build with Gradle
+        run: |
+          if [ -f "./gradlew" ]; then
+            ./gradlew build --stacktrace
+          else
+            gradle build --stacktrace
+          fi
