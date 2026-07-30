@@ -1,3 +1,4 @@
+java
 package com.bowboost.helper;
 
 import net.fabricmc.api.ClientModInitializer;
@@ -26,16 +27,20 @@ public class BowBoostHelperClient implements ClientModInitializer {
                         InputUtil.Type.KEYSYM,
                         GLFW.GLFW_KEY_B,
                         KeyBinding.Category.create(
-                                Identifier.of(MOD_ID, "key.categories.bowboosthelper")
+                                Identifier.of(
+                                        MOD_ID,
+                                        "key.categories.bowboosthelper"
+                                )
                         )
                 )
         );
 
-        hudRenderer = new HudRenderer(config);
+        // Your HudRenderer currently uses a no-argument constructor.
+        hudRenderer = new HudRenderer();
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (toggleKey.wasPressed()) {
-                config.setEnabled(!config.isEnabled());
+                config.setEnabled(!config.getEnabled());
                 config.save();
             }
         });
