@@ -15,28 +15,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show checked out files
+        run: |
+          echo "=== CURRENT DIRECTORY ==="
+          pwd
+          echo "=== ROOT FILES ==="
+          ls -la
+          echo "=== ALL FILES ==="
+          find . -maxdepth 3 -type f | sort
+
+      - name: Verify Gradle files
+        run: |
+          test -f settings.gradle
+          test -f build.gradle
+          test -f gradle.properties
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./gradlew
-        if: ${{ hashFiles('gradlew') != '' }}
-
-      - name: Verify project structure
-        run: |
-          pwd
-          echo "Repository files:"
-          ls -la
-          echo "Gradle files:"
-          find . -maxdepth 2 -type f \( -name "settings.gradle" -o -name "build.gradle" -o -name "gradle.properties" \)
-
-      - name: Build with Gradle
-        run: |
-          if [ -f "./gradlew" ]; then
-            ./gradlew build --stacktrace
-          else
-            gradle build --stacktrace
-          fi
+      - name: Build
+        run: gradle build --stacktrace
+        
