@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -15,27 +16,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show checked out files
-        run: |
-          echo "=== CURRENT DIRECTORY ==="
-          pwd
-          echo "=== ROOT FILES ==="
-          ls -la
-          echo "=== ALL FILES ==="
-          find . -maxdepth 3 -type f | sort
-
-      - name: Verify Gradle files
-        run: |
-          test -f settings.gradle
-          test -f build.gradle
-          test -f gradle.properties
-
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
+      - name: Verify Gradle files
+        working-directory: ./bowboost-helper-fixed
+        run: |
+          test -f settings.gradle
+          test -f build.gradle
+          test -f gradle.properties
+
       - name: Build
+        working-directory: ./bowboost-helper-fixed
         run: gradle build --stacktrace
-        
