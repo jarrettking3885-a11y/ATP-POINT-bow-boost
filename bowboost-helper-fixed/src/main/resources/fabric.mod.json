@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "bowboosthelper",
+  "version": "${version}",
+  "name": "Bow Boost Helper",
+  "description": "Client-side HUD helper for practicing bow-boost pitch angles. No gameplay changes, purely visual.",
+  "authors": [
+    "Lalo"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.bowboost.helper.BowBoostHelperClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
